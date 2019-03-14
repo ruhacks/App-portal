@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const sanitize = require('mongo-sanitize');
 
 //User Model
 const User = require('../models/Users');
@@ -14,11 +15,14 @@ router.get('/register', (req,res)=>res.render("register"));
 
 //Register Handle
 router.post('/register', (req,res)=>{
-    const {name, email, password, password2} = req.body;
+    const {Fname,Lname, email, password, password2} = req.body;
     let errors = [];
 
+    const sFname = sanitize(Fname).trim();
+    const sLname = sanitize(Lname).trim();
+
     //check required fields
-    if(!name || !email || !password || !password2){
+    if(!sFname ||!sLname|| !email || !password || !password2){
         errors.push({msg: "Please fill in all fields"});
     }
 
@@ -33,7 +37,8 @@ router.post('/register', (req,res)=>{
     if(errors.length>0){
         res.render('register',{
             errors,
-            name,
+            Fname:sFname,
+            Lname:sLname,
             email,
             password,
             password2
@@ -47,14 +52,16 @@ router.post('/register', (req,res)=>{
                 errors.push({msg:"Email is already registered"});
                 res.render('register',{
                     errors,
-                    name,
+                    Fname: sFname,
+                    Lname: sLname,
                     email,
                     password,
                     password2
                 });
             }else{
                 const newUser = new User({
-                    name,
+                    Fname: sFname,
+                    Lname: sLname,
                     email,
                     password
                 });

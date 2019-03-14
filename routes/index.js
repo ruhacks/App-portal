@@ -6,7 +6,7 @@ const {ensureAuthenticated}= require('../config/auth');
 router.get('/', (req,res)=>res.render("welcome.ejs"));
 //Dashboard
 router.get('/dashboard', ensureAuthenticated, (req,res)=>res.render('dashboard',{
-    name: req.user.name
+    Fname: req.user.Fname
 }));
 
 module.exports = router;
